@@ -1,7 +1,7 @@
 import { createRoute, z, OpenAPIHono } from '@hono/zod-openapi'
 import { Resvg } from '@resvg/resvg-js'
 import { apiReference } from '@scalar/hono-api-reference'
-import getQuoteCard from './getQuoteCard'
+import getQuoteCard from './quote-card/get-quote-card'
 import renderer from './renderer'
 
 const app = new OpenAPIHono()
@@ -43,7 +43,7 @@ app.openapi(
 	async (c) => {
 		const { quote, author } = c.req.valid('query')
 
-		const quoteCard = await getQuoteCard(quote, author)
+		const quoteCard = await getQuoteCard({ quote, author })
 
 		const resvg = new Resvg(quoteCard)
 

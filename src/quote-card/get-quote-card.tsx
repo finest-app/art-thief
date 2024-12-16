@@ -1,36 +1,16 @@
 import satori from 'satori'
+import type QuoteCard from './quote-card-types'
+import paperTheme from './themes/paper-themes'
 
 type ReactNode = Parameters<typeof satori>[0]
 
-const getQuoteCard = async (quote: string, author: string) => {
+const getQuoteCard = async ({ author, quote }: QuoteCard.ComponentProps) => {
 	const fontFileResponse = await fetch(
 		'https://github.com/lxgw/LxgwWenKai-Lite/raw/refs/heads/main/fonts/TTF/LXGWWenKaiMonoLite-Light.ttf',
 	).then((response) => response.arrayBuffer())
 
 	const quoteCard = await satori(
-		(
-			<div
-				style={{
-					display: 'flex',
-					flexDirection: 'column',
-					width: '100%',
-					height: '100%',
-					backgroundColor: '#f8f9fa',
-					padding: 20,
-				}}
-			>
-				<p style={{ fontSize: 72 }}>”</p>
-				<p
-					style={{
-						fontSize: 24,
-						textWrap: 'balance',
-					}}
-				>
-					{quote}
-				</p>
-				<p style={{ fontSize: 18, color: '#6c757d' }}>— {author}</p>
-			</div>
-		) as ReactNode,
+		(<paperTheme.component author={author} quote={quote} />) as ReactNode,
 		{
 			width: 600,
 			height: 400,
