@@ -2,7 +2,7 @@ import satori from 'satori'
 
 type ReactNode = Parameters<typeof satori>[0]
 
-const getQuoteCard = async (content: string, author: string) => {
+const getQuoteCard = async (quote: string, author: string) => {
 	const fontFileResponse = await fetch(
 		'https://github.com/lxgw/LxgwWenKai-Lite/raw/refs/heads/main/fonts/TTF/LXGWWenKaiMonoLite-Light.ttf',
 	).then((response) => response.arrayBuffer())
@@ -26,7 +26,7 @@ const getQuoteCard = async (content: string, author: string) => {
 						textWrap: 'balance',
 					}}
 				>
-					{content}
+					{quote}
 				</p>
 				<p style={{ fontSize: 18, color: '#6c757d' }}>— {author}</p>
 			</div>
