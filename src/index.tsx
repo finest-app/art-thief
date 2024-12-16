@@ -1,7 +1,8 @@
-import { createRoute, z, OpenAPIHono } from '@hono/zod-openapi'
+import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
 import { Resvg } from '@resvg/resvg-js'
 import { apiReference } from '@scalar/hono-api-reference'
 import getQuoteCard from './quote-card/get-quote-card'
+import QuerySchema from './quote-card/schemes/query-schema'
 import renderer from './renderer'
 
 const app = new OpenAPIHono()
@@ -15,16 +16,7 @@ app.openapi(
 		path: '/image',
 		method: 'get',
 		request: {
-			query: z.object({
-				quote: z.string().openapi({
-					description: 'Quote to render',
-					example: '如果你只读别人都在读的书，你就只能想别人所想。',
-				}),
-				author: z.string().openapi({
-					description: 'Author of the quote',
-					example: '村上春树',
-				}),
-			}),
+			query: QuerySchema,
 		},
 		responses: {
 			200: {
@@ -41,9 +33,9 @@ app.openapi(
 		},
 	}),
 	async (c) => {
-		const { quote, author } = c.req.valid('query')
+		const { quote, author, width, height } = c.req.valid('query')
 
-		const quoteCard = await getQuoteCard({ quote, author })
+		const quoteCard = await getQuoteCard({ quote, author, width, height })
 
 		const resvg = new Resvg(quoteCard)
 

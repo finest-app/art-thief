@@ -2,6 +2,20 @@ import type QuoteCard from '../quote-card-types'
 
 const paperTheme: QuoteCard.Theme = {
 	name: 'Paper',
+	fonts: async () => {
+		const fontFileResponse = await fetch(
+			'https://github.com/lxgw/LxgwWenKai-Lite/raw/refs/heads/main/fonts/TTF/LXGWWenKaiMonoLite-Light.ttf',
+		).then((response) => response.arrayBuffer())
+
+		return [
+			{
+				name: 'LXGW WenKai Mono Lite Light',
+				data: fontFileResponse,
+				weight: 400,
+				style: 'normal',
+			},
+		]
+	},
 	component: ({ quote, author }) => (
 		<div
 			style={{
