@@ -1,5 +1,5 @@
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
-import { Resvg } from '@resvg/resvg-js'
+import { initWasm, Resvg } from '@resvg/resvg-wasm'
 import { apiReference } from '@scalar/hono-api-reference'
 import getQuoteCard from './quote-card/get-quote-card'
 import QuerySchema from './quote-card/schemes/query-schema'
@@ -10,6 +10,8 @@ const app = new OpenAPIHono()
 if (false) {
 	app.use(renderer)
 }
+
+let initlized = false
 
 app.openapi(
 	createRoute({
@@ -33,6 +35,12 @@ app.openapi(
 		},
 	}),
 	async (c) => {
+		if (initlized === false) {
+			await initWasm('https://esm.sh/@resvg/resvg-wasm/index_bg.wasm')
+
+			initlized = true
+		}
+
 		const { quote, author, width, height } = c.req.valid('query')
 
 		const quoteCard = await getQuoteCard({ quote, author, width, height })
