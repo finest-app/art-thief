@@ -62,6 +62,7 @@ app.get(
 	'/',
 	apiReference({
 		theme: 'deepSpace',
+		darkMode: true,
 		favicon: '/favicon.png',
 		spec: {
 			url: '/openapi.json',

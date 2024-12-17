@@ -9,12 +9,12 @@ const QuerySchema = z.object({
 		description: 'Author of the quote',
 		example: '村上春树',
 	}),
-	width: z.number({ coerce: true }).int().openapi({
+	width: z.number().or(z.string()).pipe(z.coerce.number().int()).openapi({
 		type: 'number',
 		description: 'Width of the image',
 		example: 600,
 	}),
-	height: z.number({ coerce: true }).int().openapi({
+	height: z.number().or(z.string()).pipe(z.coerce.number().int()).openapi({
 		type: 'number',
 		description: 'Height of the image',
 		example: 400,
