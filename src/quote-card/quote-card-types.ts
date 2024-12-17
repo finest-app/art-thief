@@ -1,5 +1,7 @@
+import { type NodeImageResponse } from '@vercel/og'
 import { type FC } from 'hono/jsx'
-import { type SatoriOptions } from 'satori'
+
+type ImageOptions = ConstructorParameters<NodeImageResponse>[1]
 
 namespace QuoteCard {
 	export interface ComponentProps {
@@ -7,7 +9,7 @@ namespace QuoteCard {
 		author: string
 	}
 
-	type FontOptions = SatoriOptions['fonts']
+	type FontOptions = Exclude<Required<ImageOptions>, undefined>['fonts']
 
 	export interface Theme {
 		name: string

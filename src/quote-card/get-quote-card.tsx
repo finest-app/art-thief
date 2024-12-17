@@ -1,9 +1,7 @@
 import { type z } from '@hono/zod-openapi'
-import satori from 'satori'
+import { ImageResponse } from '@vercel/og'
 import type QuerySchema from './schemes/query-schema'
 import paperTheme from './themes/paper-themes'
-
-type ReactNode = Parameters<typeof satori>[0]
 
 const getQuoteCard = async ({
 	author,
@@ -13,8 +11,11 @@ const getQuoteCard = async ({
 }: z.infer<typeof QuerySchema>) => {
 	const theme = paperTheme
 
-	const quoteCard = await satori(
-		(<paperTheme.component author={author} quote={quote} />) as ReactNode,
+	const quoteCard = new ImageResponse(
+		(
+			// @ts-expect-error
+			<paperTheme.component quote={quote} author={author} />
+		),
 		{
 			width,
 			height,
