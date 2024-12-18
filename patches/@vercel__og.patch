@@ -1,0 +1,32 @@
+diff --git a/dist/index.edge.js b/dist/index.edge.js
+index a99b5aacc97692238d74cf99d777c116d7b72d5a..d1af31d0ef43f7aa5c94688b2e01ef1925bdb81a 100644
+--- a/dist/index.edge.js
++++ b/dist/index.edge.js
+@@ -18506,8 +18506,8 @@ var Resvg2 = class extends Resvg {
+ };
+ 
+ // src/index.edge.ts
+-import resvg_wasm from "./resvg.wasm?module";
+-import yoga_wasm from "./yoga.wasm?module";
++import resvg_wasm from "./resvg.wasm?init";
++import yoga_wasm from "./yoga.wasm?init";
+ 
+ // src/emoji/index.ts
+ var U200D = String.fromCharCode(8205);
+@@ -18925,14 +18925,14 @@ function assertValue(v2, errorMessage) {
+ // src/index.edge.ts
+ var initializedResvg = initWasm(resvg_wasm);
+ var initializedYoga = initYoga(yoga_wasm).then((yoga2) => Ll(yoga2));
+-var fallbackFont = fetch(new URL("./noto-sans-v27-latin-regular.ttf", import.meta.url)).then((res) => res.arrayBuffer());
++var fallbackFont = () => fetch(new URL("https://cdn.jsdelivr.net/fontsource/fonts/noto-sans@latest/latin-400-normal.ttf")).then((res) => res.arrayBuffer());
+ var ImageResponse = class extends Response {
+   constructor(element, options = {}) {
+     const result = new ReadableStream({
+       async start(controller) {
+         await initializedYoga;
+         await initializedResvg;
+-        const fontData = await fallbackFont;
++        const fontData = await fallbackFont();
+         const fonts = [
+           {
+             name: "sans serif",

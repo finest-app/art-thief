@@ -10,7 +10,7 @@
   "dependencies": {
     "@hono/zod-openapi": "^0.18.3",
     "@scalar/hono-api-reference": "^0.5.164",
-    "@vercel/og": "^0.6.4",
+    "@vercel/og": "0.6.4",
     "hono": "^4.6.14",
     "zod": "^3.24.1"
   },
@@ -19,9 +19,15 @@
     "@epic-web/config": "^1.16.4",
     "@hono/vite-cloudflare-pages": "^0.4.2",
     "@hono/vite-dev-server": "^0.17.0",
+    "miniflare": "^3.20241205.0",
     "prettier": "^3.4.2",
     "vite": "^6.0.3",
     "wrangler": "^3.95.0"
   },
-  "prettier": "@epic-web/config/prettier"
+  "prettier": "@epic-web/config/prettier",
+  "pnpm": {
+    "patchedDependencies": {
+      "@vercel/og": "patches/@vercel__og.patch"
+    }
+  }
 }

@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@vercel/og':
+    hash: j77pufzn4iiqhxm5s4ehi2zmuq
+    path: patches/@vercel__og.patch
+
 importers:
 
   .:
@@ -15,8 +20,8 @@ importers:
         specifier: ^0.5.164
         version: 0.5.164(hono@4.6.14)
       '@vercel/og':
-        specifier: ^0.6.4
-        version: 0.6.4
+        specifier: 0.6.4
+        version: 0.6.4(patch_hash=j77pufzn4iiqhxm5s4ehi2zmuq)
       hono:
         specifier: ^4.6.14
         version: 4.6.14
@@ -36,6 +41,9 @@ importers:
       '@hono/vite-dev-server':
         specifier: ^0.17.0
         version: 0.17.0(hono@4.6.14)(miniflare@3.20241205.0)(wrangler@3.95.0(@cloudflare/workers-types@4.20241205.0))
+      miniflare:
+        specifier: ^3.20241205.0
+        version: 3.20241205.0
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
@@ -2440,7 +2448,7 @@ snapshots:
       hookable: 5.5.3
       zhead: 2.2.4
 
-  '@vercel/og@0.6.4':
+  '@vercel/og@0.6.4(patch_hash=j77pufzn4iiqhxm5s4ehi2zmuq)':
     dependencies:
       '@resvg/resvg-wasm': 2.4.0
       satori: 0.12.0
