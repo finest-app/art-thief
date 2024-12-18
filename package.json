@@ -22,6 +22,7 @@
     "miniflare": "^3.20241205.0",
     "prettier": "^3.4.2",
     "vite": "^6.0.3",
+    "vite-plugin-static-copy": "^2.2.0",
     "wrangler": "^3.95.0"
   },
   "prettier": "@epic-web/config/prettier",
