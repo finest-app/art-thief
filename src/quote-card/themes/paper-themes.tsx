@@ -1,6 +1,6 @@
 import type QuoteCard from '../quote-card-types'
 
-const paperTheme: QuoteCard.Theme = {
+const paperTheme = {
 	name: 'Paper',
 	fonts: async () => {
 		const fontFileResponse = await fetch(
@@ -39,6 +39,6 @@ const paperTheme: QuoteCard.Theme = {
 			<p style={{ fontSize: 18, color: '#6c757d' }}>— {author}</p>
 		</div>
 	),
-}
+} as const satisfies QuoteCard.Theme
 
 export default paperTheme

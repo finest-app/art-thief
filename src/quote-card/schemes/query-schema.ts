@@ -1,4 +1,10 @@
 import { z } from '@hono/zod-openapi'
+import themes from '../themes/themes'
+
+const themeNames = themes.map((theme) => theme.name)
+
+type ThemeName = (typeof themeNames)[number]
+type ThemeArray = [ThemeName, ...ThemeName[]]
 
 const QuerySchema = z.object({
 	quote: z.string().openapi({
@@ -18,6 +24,12 @@ const QuerySchema = z.object({
 		type: 'number',
 		description: 'Height of the image',
 		example: 400,
+	}),
+	theme: z.enum(themeNames as ThemeArray).openapi({
+		type: 'string',
+		enum: themeNames,
+		description: 'Theme of the quote card',
+		example: 'Paper',
 	}),
 })
 
