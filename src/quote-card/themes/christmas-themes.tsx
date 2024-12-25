@@ -45,6 +45,7 @@ const christmasTheme = {
 					flexDirection: 'column',
 					justifyContent: 'center',
 					alignItems: 'center',
+					padding: 20,
 				}}
 			>
 				<p
@@ -52,12 +53,11 @@ const christmasTheme = {
 						fontSize: 64,
 						textWrap: 'balance',
 						color: 'white',
-						padding: 20,
 					}}
 				>
 					{quote}
 				</p>
-				<p style={{ fontSize: 18, color: 'white' }}>— {author}</p>
+				<p style={{ fontSize: 28, color: 'white' }}>— {author}</p>
 			</div>
 		</div>
 	),
