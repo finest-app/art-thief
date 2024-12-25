@@ -57,7 +57,7 @@ const christmasTheme = {
 				>
 					{quote}
 				</p>
-				<p style={{ fontSize: 28, color: 'white' }}>— {author}</p>
+				<p style={{ fontSize: 32, color: 'white' }}>— {author}</p>
 			</div>
 		</div>
 	),
