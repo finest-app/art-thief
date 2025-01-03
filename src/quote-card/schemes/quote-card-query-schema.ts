@@ -6,7 +6,7 @@ const themeNames = themes.map((theme) => theme.name)
 type ThemeName = (typeof themeNames)[number]
 type ThemeArray = [ThemeName, ...ThemeName[]]
 
-const QuerySchema = z.object({
+const QuoteCardQuerySchema = z.object({
 	quote: z.string().openapi({
 		description: 'Quote to render',
 		example: '如果你只读别人都在读的书，你就只能想别人所想。',
@@ -33,4 +33,4 @@ const QuerySchema = z.object({
 	}),
 })
 
-export default QuerySchema
+export default QuoteCardQuerySchema

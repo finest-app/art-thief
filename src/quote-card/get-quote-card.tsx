@@ -1,6 +1,6 @@
 import { type z } from '@hono/zod-openapi'
 import { ImageResponse } from '@vercel/og'
-import type QuerySchema from './schemes/query-schema'
+import type QuoteCardQuerySchema from './schemes/quote-card-query-schema'
 import themes from './themes/themes'
 
 const getQuoteCard = async ({
@@ -9,7 +9,7 @@ const getQuoteCard = async ({
 	width,
 	height,
 	theme,
-}: z.infer<typeof QuerySchema>) => {
+}: z.infer<typeof QuoteCardQuerySchema>) => {
 	const currentTheme = themes.find((_theme) => _theme.name === theme)
 
 	if (currentTheme === undefined) {
