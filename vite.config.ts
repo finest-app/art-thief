@@ -39,7 +39,12 @@ export default defineConfig({
 					) {
 						result = result.replace(
 							entry,
-							entry.replace(/.*\/([^\/]+\.wasm)\?.*/, '$1'),
+							entry.replace(
+								/.*\/([^\/]+\.wasm)\?.*/,
+								entry.endsWith('.wasm?init') || entry.endsWith('.wasm?url')
+									? './$1'
+									: '$1',
+							),
 						)
 					}
 				})
