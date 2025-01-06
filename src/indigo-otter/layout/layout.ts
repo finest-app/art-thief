@@ -36,16 +36,16 @@ const layout = (root: Node) => {
 
 		// If element has defined width or height, set it.
 		if (typeof e.style.width === 'number') {
-			e.layout.height = e.style.width
+			e.layout.width = e.style.width
 		}
 		if (typeof e.style.height === 'number') {
-			e.layout.width = e.style.height
+			e.layout.height = e.style.height
 		}
 		if (typeof e.style.flexBasis === 'number') {
 			if (isHorizontal) {
-				e.layout.height = e.style.flexBasis
-			} else {
 				e.layout.width = e.style.flexBasis
+			} else {
+				e.layout.height = e.style.flexBasis
 			}
 		}
 
@@ -63,15 +63,10 @@ const layout = (root: Node) => {
 				p = p.parent
 			}
 
-			e.layout.height =
+			e.layout.width =
 				toPercentage(e.style.width) *
 				accumulatedMultiplier *
 				(definedWidth ?? 0)
-
-			if (e.parent) {
-				e.layout.height -=
-					e.parent.style.paddingLeft + e.parent.style.paddingRight
-			}
 		}
 		if (typeof e.style.height === 'string') {
 			let definedHeight = undefined
@@ -87,30 +82,25 @@ const layout = (root: Node) => {
 				p = p.parent
 			}
 
-			e.layout.width =
+			e.layout.height =
 				toPercentage(e.style.height) *
 				accumulatedMultiplier *
 				(definedHeight ?? 0)
-
-			if (e.parent) {
-				e.layout.width -=
-					e.parent.style.paddingTop + e.parent.style.paddingBottom
-			}
 		}
 		if (typeof e.style.flexBasis === 'string') {
 			if (isHorizontal) {
-				e.layout.height =
-					toPercentage(e.style.flexBasis) * (e.parent?.layout.height ?? 0)
-			} else {
 				e.layout.width =
 					toPercentage(e.style.flexBasis) * (e.parent?.layout.width ?? 0)
+			} else {
+				e.layout.height =
+					toPercentage(e.style.flexBasis) * (e.parent?.layout.height ?? 0)
 			}
 		}
 
 		const p = e.parent
 		if (p && e instanceof Text) {
-			const maxWidth = p.layout.height
-				? p.layout.height - p.style.paddingLeft - p.style.paddingRight
+			const maxWidth = p.layout.width
+				? p.layout.width - p.style.paddingLeft - p.style.paddingRight
 				: Number.POSITIVE_INFINITY
 
 			const measuredText = measureText(
@@ -123,8 +113,8 @@ const layout = (root: Node) => {
 			e.lines = measuredText.lines
 			e.lineHeight = measuredText.lineHeight
 
-			e.layout.height = measuredText.width
-			e.layout.width = measuredText.height
+			e.layout.width = measuredText.width
+			e.layout.height = measuredText.height
 		}
 	}
 
@@ -134,6 +124,8 @@ const layout = (root: Node) => {
 	 */
 	for (let i = nodesInLevelOrder.length - 1; i >= 0; i--) {
 		const e = nodesInLevelOrder[i]
+
+		applyMinMaxAndAspectRatio(e)
 
 		const isWrap = e.style.flexWrap === 'wrap'
 		const isHorizontal = e.style.flexDirection === 'row'
@@ -154,21 +146,18 @@ const layout = (root: Node) => {
 				childrenCount++
 
 				if (isHorizontal) {
-					e.layout.height += c.layout.height
+					e.layout.width += c.layout.width
 				}
 
 				if (isVertical) {
-					e.layout.height = Math.max(
-						e.layout.height,
-						c.layout.height,
-					)
+					e.layout.width = Math.max(e.layout.width, c.layout.width)
 				}
 			}
 
-			e.layout.height += e.style.paddingLeft + e.style.paddingRight
+			e.layout.width += e.style.paddingLeft + e.style.paddingRight
 
 			if (isHorizontal) {
-				e.layout.height += (childrenCount - 1) * e.style.rowGap
+				e.layout.width += (childrenCount - 1) * e.style.rowGap
 			}
 		}
 
@@ -183,22 +172,19 @@ const layout = (root: Node) => {
 				childrenCount++
 
 				if (isVertical) {
-					e.layout.width += c.layout.width
+					e.layout.height += c.layout.height
 				}
 
 				if (isHorizontal) {
-					e.layout.width = Math.max(
-						e.layout.width,
-						c.layout.width,
-					)
+					e.layout.height = Math.max(e.layout.height, c.layout.height)
 				}
 			}
 
 			// Include padding and gaps.
-			e.layout.width += e.style.paddingTop + e.style.paddingBottom
+			e.layout.height += e.style.paddingTop + e.style.paddingBottom
 
 			if (isVertical) {
-				e.layout.width += (childrenCount - 1) * e.style.columnGap
+				e.layout.height += (childrenCount - 1) * e.style.columnGap
 			}
 		}
 
@@ -206,10 +192,10 @@ const layout = (root: Node) => {
 		// here we reset the size and build it again, for all rows.
 		if (isWrap) {
 			if (isHorizontal && e.style.height === undefined) {
-				e.layout.width = e.style.paddingTop + e.style.paddingBottom
+				e.layout.height = e.style.paddingTop + e.style.paddingBottom
 			}
 			if (isVertical && e.style.width === undefined) {
-				e.layout.height = e.style.paddingLeft + e.style.paddingRight
+				e.layout.width = e.style.paddingLeft + e.style.paddingRight
 			}
 		}
 
@@ -224,11 +210,11 @@ const layout = (root: Node) => {
 			}
 
 			const deltaMain = isHorizontal
-				? c.layout.height + (isJustifySpace ? 0 : e.style.rowGap)
-				: c.layout.width + (isJustifySpace ? 0 : e.style.columnGap)
+				? c.layout.width + (isJustifySpace ? 0 : e.style.rowGap)
+				: c.layout.height + (isJustifySpace ? 0 : e.style.columnGap)
 			const parentMain = isHorizontal
-				? e.layout.height - e.style.paddingLeft - e.style.paddingRight
-				: e.layout.width - e.style.paddingTop - e.style.paddingBottom
+				? e.layout.width - e.style.paddingLeft - e.style.paddingRight
+				: e.layout.height - e.style.paddingTop - e.style.paddingBottom
 
 			if (isWrap && main + deltaMain > parentMain) {
 				let length = longestChildSize
@@ -237,10 +223,10 @@ const layout = (root: Node) => {
 				rows.push([])
 				if (isWrap) {
 					if (isHorizontal && e.style.height === undefined) {
-						e.layout.width += length
+						e.layout.height += length
 					}
 					if (isVertical && e.style.width === undefined) {
-						e.layout.height += length
+						e.layout.width += length
 					}
 				}
 				main = 0
@@ -251,7 +237,7 @@ const layout = (root: Node) => {
 			// Keep track of the longest child in the flex container for the purpose of wrapping.
 			longestChildSize = Math.max(
 				longestChildSize,
-				isHorizontal ? c.layout.width : c.layout.height,
+				isHorizontal ? c.layout.height : c.layout.width,
 			)
 
 			rows.at(-1)?.push(c)
@@ -262,10 +248,10 @@ const layout = (root: Node) => {
 		// The last row.
 		if (isWrap) {
 			if (isHorizontal && e.style.height === undefined) {
-				e.layout.width += longestChildSize
+				e.layout.height += longestChildSize
 			}
 			if (isVertical && e.style.width === undefined) {
-				e.layout.height += longestChildSize
+				e.layout.width += longestChildSize
 			}
 		}
 	}
@@ -284,8 +270,8 @@ const layout = (root: Node) => {
 			e.style.flex = 0
 		}
 
-		const parentWidth = p?.layout.height ?? 0
-		const parentHeight = p?.layout.width ?? 0
+		const parentWidth = p?.layout.width ?? 0
+		const parentHeight = p?.layout.height ?? 0
 
 		const direction = e.style.flexDirection
 		const isHorizontal = direction === 'row'
@@ -299,10 +285,10 @@ const layout = (root: Node) => {
 		// If parent had undefined width or height and its size was only calculated once children sizes
 		// were added, then percentage sizing should happen now.
 		if (p?.style.width === undefined && typeof e.style.width === 'string') {
-			e.layout.height = toPercentage(e.style.width) * parentWidth
+			e.layout.width = toPercentage(e.style.width) * parentWidth
 		}
 		if (p?.style.height === undefined && typeof e.style.height === 'string') {
-			e.layout.width = toPercentage(e.style.height) * parentHeight
+			e.layout.height = toPercentage(e.style.height) * parentHeight
 		}
 
 		// If element has both left, right offsets and no width, calculate width (analogues for height).
@@ -312,7 +298,7 @@ const layout = (root: Node) => {
 			e.style.height === undefined
 		) {
 			e.layout.y = (p?.layout.y ?? 0) + e.style.top
-			e.layout.width = parentHeight - e.style.top - e.style.bottom
+			e.layout.height = parentHeight - e.style.top - e.style.bottom
 		}
 		if (
 			e.style.left !== undefined &&
@@ -320,7 +306,7 @@ const layout = (root: Node) => {
 			e.style.width === undefined
 		) {
 			e.layout.x = (p?.layout.x ?? 0) + e.style.left
-			e.layout.height = parentWidth - e.style.left - e.style.right
+			e.layout.width = parentWidth - e.style.left - e.style.right
 		}
 
 		// Handle absolute positioning.
@@ -333,8 +319,8 @@ const layout = (root: Node) => {
 			} else if (e.style.right !== undefined) {
 				e.layout.x =
 					(p?.layout.x ?? 0) +
-					(p?.layout.height ?? 0) -
-					e.layout.height -
+					(p?.layout.width ?? 0) -
+					e.layout.width -
 					e.style.right
 			}
 			if (e.style.top !== undefined) {
@@ -342,8 +328,8 @@ const layout = (root: Node) => {
 			} else if (e.style.bottom !== undefined) {
 				e.layout.y =
 					(p?.layout.y ?? 0) +
-					(p?.layout.width ?? 0) -
-					e.layout.width -
+					(p?.layout.height ?? 0) -
+					e.layout.height -
 					e.style.bottom
 			}
 		}
@@ -373,7 +359,7 @@ const layout = (root: Node) => {
 				childrenCount += 1
 				maxCrossChild = Math.max(
 					maxCrossChild,
-					isHorizontal ? c.layout.width : c.layout.height,
+					isHorizontal ? c.layout.height : c.layout.width,
 				)
 			}
 			maxCrossChildren.push(maxCrossChild)
@@ -390,8 +376,8 @@ const layout = (root: Node) => {
 
 			// Calculate available space for justify content along the main axis.
 			let availableMain = isHorizontal
-				? e.layout.height - e.style.paddingLeft - e.style.paddingRight
-				: e.layout.width - e.style.paddingTop - e.style.paddingBottom
+				? e.layout.width - e.style.paddingLeft - e.style.paddingRight
+				: e.layout.height - e.style.paddingTop - e.style.paddingBottom
 
 			if (!isJustifySpace) {
 				availableMain -= mainGap * (line.length - 1)
@@ -402,9 +388,7 @@ const layout = (root: Node) => {
 					continue
 				}
 
-				availableMain -= isHorizontal
-					? c.layout.height
-					: c.layout.width
+				availableMain -= isHorizontal ? c.layout.width : c.layout.height
 
 				if (c.style.flex > 0 || c.style.flexGrow > 0) {
 					if (c.style.flex > 0) {
@@ -454,29 +438,27 @@ const layout = (root: Node) => {
 						}
 
 						if (isHorizontal) {
-							c.layout.height += size
-						} else {
 							c.layout.width += size
+						} else {
+							c.layout.height += size
 						}
 					}
 					if (availableMain < 0 && c.style.flexShrink > 0) {
 						// TODO release: figure out similar logic as above with splitting remainder.
 						if (isHorizontal) {
-							c.layout.height +=
+							c.layout.width +=
 								(c.style.flexShrink / totalFlexShrink) * availableMain
 						} else {
-							c.layout.width +=
+							c.layout.height +=
 								(c.style.flexShrink / totalFlexShrink) * availableMain
 						}
 					}
 				}
 
-				applyMinMaxAndAspectRatio(c)
-
 				if (isJustifySpace) {
 					c.layout.x += isHorizontal ? main : cross
 					c.layout.y += isHorizontal ? cross : main
-					main += isHorizontal ? c.layout.height : c.layout.width
+					main += isHorizontal ? c.layout.width : c.layout.height
 
 					if (e.style.justifyContent === 'space-between') {
 						main += availableMain / (childrenCount - 1)
@@ -491,7 +473,7 @@ const layout = (root: Node) => {
 					c.layout.x += isHorizontal ? main : cross
 					c.layout.y += isHorizontal ? cross : main
 
-					main += isHorizontal ? c.layout.height : c.layout.width
+					main += isHorizontal ? c.layout.width : c.layout.height
 					main += mainGap
 				}
 
@@ -500,23 +482,23 @@ const layout = (root: Node) => {
 				// cross size. For multi lines it's not relevant.
 				if (e.layout.rows.length === 1) {
 					lineCrossSize = isHorizontal
-						? e.layout.width - e.style.paddingTop - e.style.paddingBottom
-						: e.layout.height - e.style.paddingLeft - e.style.paddingRight
+						? e.layout.height - e.style.paddingTop - e.style.paddingBottom
+						: e.layout.width - e.style.paddingLeft - e.style.paddingRight
 				}
 
 				// Apply align items.
 				if (e.style.alignItems === 'center') {
 					if (isHorizontal) {
-						c.layout.y += (lineCrossSize - c.layout.width) / 2
+						c.layout.y += (lineCrossSize - c.layout.height) / 2
 					} else {
-						c.layout.x += (lineCrossSize - c.layout.height) / 2
+						c.layout.x += (lineCrossSize - c.layout.width) / 2
 					}
 				}
 				if (e.style.alignItems === 'end') {
 					if (isHorizontal) {
-						c.layout.y += lineCrossSize - c.layout.width
+						c.layout.y += lineCrossSize - c.layout.height
 					} else {
-						c.layout.x += lineCrossSize - c.layout.height
+						c.layout.x += lineCrossSize - c.layout.width
 					}
 				}
 				if (
@@ -525,9 +507,9 @@ const layout = (root: Node) => {
 						(isVertical && c.style.width === undefined))
 				) {
 					if (isHorizontal) {
-						c.layout.width = lineCrossSize
-					} else {
 						c.layout.height = lineCrossSize
+					} else {
+						c.layout.width = lineCrossSize
 					}
 				}
 
@@ -552,8 +534,8 @@ const layout = (root: Node) => {
 
 		e.layout.x = Math.round(e.layout.x)
 		e.layout.y = Math.round(e.layout.y)
-		e.layout.height = Math.round(e.layout.height)
 		e.layout.width = Math.round(e.layout.width)
+		e.layout.height = Math.round(e.layout.height)
 	}
 }
 
@@ -576,38 +558,35 @@ const applyMinMaxAndAspectRatio = (e: Node) => {
 	if (e.style.minHeight !== undefined) {
 		const value =
 			typeof e.style.minHeight === 'string'
-				? toPercentage(e.style.minHeight) * (e.parent?.layout.width ?? 0)
+				? toPercentage(e.style.minHeight) * (e.parent?.layout.height ?? 0)
 				: e.style.minHeight
 		minHeight = value
 	}
 	if (e.style.minWidth !== undefined) {
 		const value =
 			typeof e.style.minWidth === 'string'
-				? toPercentage(e.style.minWidth) * (e.parent?.layout.height ?? 0)
+				? toPercentage(e.style.minWidth) * (e.parent?.layout.width ?? 0)
 				: e.style.minWidth
 		minWidth = value
 	}
 	if (e.style.maxHeight !== undefined) {
 		const value =
 			typeof e.style.maxHeight === 'string'
-				? toPercentage(e.style.maxHeight) * (e.parent?.layout.width ?? 0)
+				? toPercentage(e.style.maxHeight) * (e.parent?.layout.height ?? 0)
 				: e.style.maxHeight
 		maxHeight = value
 	}
 	if (e.style.maxWidth !== undefined) {
 		const value =
 			typeof e.style.maxWidth === 'string'
-				? toPercentage(e.style.maxWidth) * (e.parent?.layout.height ?? 0)
+				? toPercentage(e.style.maxWidth) * (e.parent?.layout.width ?? 0)
 				: e.style.maxWidth
 		maxWidth = value
 	}
 
-	let effectiveWidth = Math.min(
-		Math.max(e.layout.height, minWidth),
-		maxWidth,
-	)
+	let effectiveWidth = Math.min(Math.max(e.layout.width, minWidth), maxWidth)
 	let effectiveHeight = Math.min(
-		Math.max(e.layout.width, minHeight),
+		Math.max(e.layout.height, minHeight),
 		maxHeight,
 	)
 
@@ -658,8 +637,8 @@ const applyMinMaxAndAspectRatio = (e: Node) => {
 		}
 	}
 
-	e.layout.height = effectiveWidth
-	e.layout.width = effectiveHeight
+	e.layout.width = effectiveWidth
+	e.layout.height = effectiveHeight
 }
 
 export default layout

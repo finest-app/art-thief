@@ -9,11 +9,11 @@ interface NodeLayout {
 	 */
 	rows: Node[][]
 	/**
-	 * Height of the element.
+	 * Width of the element.
 	 */
 	width: number
 	/**
-	 * Width of the element.
+	 * Height of the element.
 	 */
 	height: number
 	/**
@@ -29,8 +29,8 @@ interface NodeLayout {
 class Node<TStyle = {}> {
 	layout: NodeLayout = {
 		rows: [],
-		width: 0,
 		height: 0,
+		width: 0,
 		x: 0,
 		y: 0,
 	}

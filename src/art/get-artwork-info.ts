@@ -34,8 +34,6 @@ const getArtworkInfo = async ({
 				fontkit.create(new Uint8Array(buffer) as Buffer) as fontkit.Font,
 		)
 
-	const ascpectRatio = artworkInfo.image.width / artworkInfo.image.height
-
 	const { svg, width } = renderToSVG(
 		new View({
 			style: {
@@ -51,8 +49,8 @@ const getArtworkInfo = async ({
 					href: artworkInfo.image.contentUrl,
 					style: {
 						borderRadius: 8,
-						width: 720,
-						height: 720 / ascpectRatio,
+						width: '100%',
+						aspectRatio: artworkInfo.image.width / artworkInfo.image.height,
 					},
 				}),
 				new Text({
