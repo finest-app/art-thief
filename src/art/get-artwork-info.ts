@@ -1,8 +1,8 @@
 import { type z } from '@hono/zod-openapi'
 import { initWasm, Resvg } from '@resvg/resvg-wasm'
 import wasm from '@resvg/resvg-wasm/index_bg.wasm?url'
+import * as cheerio from 'cheerio'
 import * as fontkit from 'fontkit'
-import { parseHTML } from 'linkedom'
 import invariant from 'tiny-invariant'
 import { renderToSVG, View, Image, Text } from '../indigo-otter'
 import type ArtWorkInfoQuerySchema from './schemes/artwork-info-query-schema'
@@ -15,13 +15,9 @@ const getArtworkInfo = async ({
 }: z.infer<typeof ArtWorkInfoQuerySchema>) => {
 	const html = await fetch(url).then((response) => response.text())
 
-	const { document } = parseHTML(html)
+	const $ = cheerio.load(html)
 
-	const script = document.querySelector('script[type="application/ld+json"]')
-
-	invariant(script && script.textContent, 'No JSON-LD script found')
-
-	const json = JSON.parse(script.textContent)
+	const json = JSON.parse($('script[type="application/ld+json"]').text())
 
 	invariant(Array.isArray(json), 'JSON-LD script is not an array')
 
