@@ -17,6 +17,7 @@ export default defineConfig({
 					src: [
 						'node_modules/@vercel/og/dist/resvg.wasm',
 						'node_modules/@vercel/og/dist/yoga.wasm',
+						'node_modules/@resvg/resvg-wasm/index_bg.wasm',
 					],
 					dest: '',
 				},
@@ -25,13 +26,17 @@ export default defineConfig({
 		{
 			name: 'wasm-normalizer',
 			config: () => ({
-				build: { rollupOptions: { external: /\.wasm\?module$/ } },
+				build: { rollupOptions: { external: /\.wasm(\?.*)?$/ } },
 			}),
 			renderChunk: (code, renderedChunk) => {
 				let result = code
 
 				renderedChunk.imports.forEach((entry) => {
-					if (entry.endsWith('.wasm?module')) {
+					if (
+						entry.endsWith('.wasm?module') ||
+						entry.endsWith('.wasm?init') ||
+						entry.endsWith('.wasm?url')
+					) {
 						result = result.replace(
 							entry,
 							entry.replace(/.*\/([^\/]+\.wasm)\?.*/, '$1'),

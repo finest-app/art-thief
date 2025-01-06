@@ -2,7 +2,6 @@ import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
 import { apiReference } from '@scalar/hono-api-reference'
 import getArtworkInfo from './art/get-artwork-info'
 import ArtWorkInfoQuerySchema from './art/schemes/artwork-info-query-schema'
-import artworkInfoSchema from './art/schemes/artwork-info-schema'
 import getQuoteCard from './quote-card/get-quote-card'
 import QuoteCardQuerySchema from './quote-card/schemes/quote-card-query-schema'
 import renderer from './renderer'
@@ -50,17 +49,18 @@ app.openapi(
 			200: {
 				description: 'Artwork information',
 				content: {
-					'application/json': {
-						schema: artworkInfoSchema,
+					'image/png': {
+						schema: {
+							type: 'string',
+							format: 'binary',
+						},
 					},
 				},
 			},
 		},
 	}),
-	async (c) => {
-		const artworkInfo = await getArtworkInfo(c.req.valid('query'))
-
-		return c.json(artworkInfo)
+	(c) => {
+		return getArtworkInfo(c.req.valid('query'))
 	},
 )
 
