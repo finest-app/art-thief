@@ -1,20 +1,15 @@
-import { type NodeImageResponse } from '@vercel/og'
-import { type FC } from 'hono/jsx'
-
-type ImageOptions = ConstructorParameters<NodeImageResponse>[1]
+import { type Node } from '../indigo-otter'
 
 namespace QuoteCard {
 	export interface ComponentProps {
 		quote: string
 		author: string
+		width: number
 	}
-
-	type FontOptions = Exclude<Required<ImageOptions>, undefined>['fonts']
 
 	export interface Theme {
 		name: string
-		fonts: () => Promise<FontOptions>
-		component: FC<ComponentProps>
+		component: (props: ComponentProps) =>Promise<Node>
 	}
 }
 

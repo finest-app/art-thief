@@ -9,21 +9,16 @@ type ThemeArray = [ThemeName, ...ThemeName[]]
 const QuoteCardQuerySchema = z.object({
 	quote: z.string().openapi({
 		description: 'Quote to render',
-		example: '如果你只读别人都在读的书，你就只能想别人所想。',
+		example: '阅读一本书有两个动机：一是你喜欢这本书；二是你可以夸耀这本书。',
 	}),
 	author: z.string().openapi({
 		description: 'Author of the quote',
-		example: '村上春树',
+		example: '伯特兰·罗素',
 	}),
 	width: z.number().or(z.string()).pipe(z.coerce.number().int()).openapi({
 		type: 'number',
 		description: 'Width of the image',
 		example: 600,
-	}),
-	height: z.number().or(z.string()).pipe(z.coerce.number().int()).openapi({
-		type: 'number',
-		description: 'Height of the image',
-		example: 400,
 	}),
 	theme: z.enum(themeNames as ThemeArray).openapi({
 		type: 'string',

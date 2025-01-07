@@ -4,11 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-patchedDependencies:
-  '@vercel/og':
-    hash: mqjxqvxsorsmwpf5r7ilut3awq
-    path: patches/@vercel__og.patch
-
 importers:
 
   .:
@@ -24,7 +19,7 @@ importers:
         version: 0.5.165(hono@4.6.16)
       '@vercel/og':
         specifier: 0.6.4
-        version: 0.6.4(patch_hash=mqjxqvxsorsmwpf5r7ilut3awq)
+        version: 0.6.4
       cheerio:
         specifier: ^1.0.0
         version: 1.0.0
@@ -2667,7 +2662,7 @@ snapshots:
       hookable: 5.5.3
       zhead: 2.2.4
 
-  '@vercel/og@0.6.4(patch_hash=mqjxqvxsorsmwpf5r7ilut3awq)':
+  '@vercel/og@0.6.4':
     dependencies:
       '@resvg/resvg-wasm': 2.4.0
       satori: 0.12.0

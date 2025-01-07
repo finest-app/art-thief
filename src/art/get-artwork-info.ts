@@ -1,14 +1,12 @@
 import { type z } from '@hono/zod-openapi'
-import { initWasm, Resvg } from '@resvg/resvg-wasm'
-import wasm from '@resvg/resvg-wasm/index_bg.wasm?url'
+import { Resvg } from '@resvg/resvg-wasm'
 import * as cheerio from 'cheerio'
 import * as fontkit from 'fontkit'
 import invariant from 'tiny-invariant'
+import initResvg from '../helpers/initResvg'
 import { renderToSVG, View, Image, Text } from '../indigo-otter'
 import type ArtWorkInfoQuerySchema from './schemes/artwork-info-query-schema'
 import artworkInfoSchema from './schemes/artwork-info-schema'
-
-let wasmInitialized = false
 
 const getArtworkInfo = async ({
 	url,
@@ -64,15 +62,7 @@ const getArtworkInfo = async ({
 		}),
 	)
 
-	if (wasmInitialized === false) {
-		await initWasm(
-			import.meta.env.DEV
-				? fetch('https://esm.sh/@resvg/resvg-wasm/index_bg.wasm')
-				: wasm,
-		)
-
-		wasmInitialized = true
-	}
+	await initResvg()
 
 	const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: width } })
 

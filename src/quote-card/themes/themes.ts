@@ -1,6 +1,5 @@
-import christmasTheme from './christmas-themes'
 import paperTheme from './paper-themes'
 
-const themes = [paperTheme, christmasTheme]
+const themes = [paperTheme]
 
 export default themes
