@@ -36,9 +36,8 @@ const getArtworkInfo = async ({
 		new View({
 			style: {
 				backgroundColor: '#f9fafb',
-				padding: 40,
-				gap: 24,
-				alignItems: 'center',
+				padding: 20,
+				gap: 20,
 				borderRadius: 8,
 				width: 800,
 			},
@@ -50,6 +49,20 @@ const getArtworkInfo = async ({
 						width: '100%',
 						aspectRatio: artworkInfo.image.width / artworkInfo.image.height,
 					},
+				}),
+				new View({
+					children: [
+						new Text({
+							text: artworkInfo.name.split('-')[0],
+							font: noto,
+							style: { color: '#1a1a1a', fontSize: 16 },
+						}),
+						new Text({
+							text: artworkInfo.author,
+							font: noto,
+							style: { color: '#4a4a4a', fontSize: 14 },
+						}),
+					],
 				}),
 				new Text({
 					text: artworkInfo.description
