@@ -13,7 +13,6 @@
     "@hono/zod-openapi": "^0.18.3",
     "@resvg/resvg-wasm": "^2.6.2",
     "@scalar/hono-api-reference": "^0.5.165",
-    "@vercel/og": "0.6.4",
     "cheerio": "^1.0.0",
     "css-line-break": "^2.1.0",
     "fontkit": "^2.0.4",
@@ -22,16 +21,16 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20241230.0",
+    "@cloudflare/workers-types": "^4.20250109.0",
     "@epic-web/config": "^1.16.5",
     "@hono/vite-cloudflare-pages": "^0.4.2",
     "@hono/vite-dev-server": "^0.18.0",
     "@types/fontkit": "^2.0.7",
-    "miniflare": "^3.20241218.0",
+    "miniflare": "^3.20241230.1",
     "prettier": "^3.4.2",
     "vite": "^6.0.7",
     "vite-plugin-static-copy": "^2.2.0",
-    "wrangler": "^3.99.0"
+    "wrangler": "^3.101.0"
   },
   "prettier": "@epic-web/config/prettier"
 }

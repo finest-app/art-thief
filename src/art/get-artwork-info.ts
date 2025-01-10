@@ -88,11 +88,13 @@ const getArtworkInfo = async ({
 
 	const renderedImage = resvg.render()
 
-	const image = renderedImage.asPng()
+	const png = renderedImage.asPng()
 
 	renderedImage.free()
 
-	return new Response(image, { headers: { 'Content-Type': 'image/png' } })
+	resvg.free()
+
+	return new Response(png, { headers: { 'Content-Type': 'image/png' } })
 }
 
 export default getArtworkInfo
