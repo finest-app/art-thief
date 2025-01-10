@@ -24,7 +24,7 @@ const getArtworkInfo = async ({
 	invariant(artworkInfo, 'No artwork found')
 
 	const noto = await fetch(
-		'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-sc@latest/chinese-simplified-400-normal.woff2',
+		'https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.ttf',
 	)
 		.then((response) => response.arrayBuffer())
 		.then(
@@ -55,19 +55,19 @@ const getArtworkInfo = async ({
 						new Text({
 							text: artworkInfo.name.split('-')[0],
 							font: noto,
-							style: { color: '#1a1a1a', fontSize: 16 },
+							style: { color: '#1a1a1a', fontSize: 20 },
 						}),
 						new Text({
 							text: artworkInfo.author,
 							font: noto,
-							style: { color: '#4a4a4a', fontSize: 14 },
+							style: { color: '#4a4a4a', fontSize: 16 },
 						}),
 					],
 				}),
 				new Text({
 					text: artworkInfo.description,
 					font: noto,
-					style: { color: '#2a2a2a', fontSize: 17 },
+					style: { color: '#2a2a2a', fontSize: 20 },
 				}),
 			],
 		}),
