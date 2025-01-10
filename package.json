@@ -1,5 +1,6 @@
 {
-  "name": "minimalist",
+  "name": "art-thief",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
