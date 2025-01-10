@@ -1,6 +1,6 @@
 import { type z } from '@hono/zod-openapi'
 import { Resvg } from '@resvg/resvg-wasm'
-import * as cheerio from 'cheerio'
+import * as cheerio from 'cheerio/slim'
 import * as fontkit from 'fontkit'
 import invariant from 'tiny-invariant'
 import initResvg from '../helpers/initResvg'
@@ -65,9 +65,7 @@ const getArtworkInfo = async ({
 					],
 				}),
 				new Text({
-					text: artworkInfo.description
-						.replaceAll('<p>', '')
-						.replaceAll('</p>', ''),
+					text: artworkInfo.description,
 					font: noto,
 					style: { color: '#2a2a2a', fontSize: 17 },
 				}),
