@@ -7,7 +7,7 @@
     "build": "vite build",
     "miniflare": "node miniflare.js",
     "preview": "wrangler pages dev",
-    "deploy": "npm run build && wrangler pages deploy"
+    "deploy": "pnpm run build && wrangler pages deploy"
   },
   "dependencies": {
     "@hono/zod-openapi": "^0.18.3",
