@@ -8,6 +8,7 @@ import { renderToSVG, View, Image, Text } from '../indigo-otter'
 import getImageColors from './get-image-colors'
 import type ArtWorkInfoQuerySchema from './schemes/artwork-info-query-schema'
 import artworkInfoSchema from './schemes/artwork-info-schema'
+import translateEnToZh from './translateEnToZh'
 
 const getArtworkInfo = async ({
 	url,
@@ -16,7 +17,9 @@ const getArtworkInfo = async ({
 
 	const $ = cheerio.load(html)
 
-	const json = JSON.parse($('script[type="application/ld+json"]').text())
+	const json = JSON.parse(
+		$('script[type="application/ld+json"]').text().replaceAll('\n', '\\n'),
+	)
 
 	invariant(Array.isArray(json), 'JSON-LD script is not an array')
 
@@ -25,7 +28,7 @@ const getArtworkInfo = async ({
 	invariant(artworkInfo, 'No artwork found')
 
 	const noto = await fetch(
-		'https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.ttf',
+		'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-sc@latest/chinese-simplified-400-normal.ttf',
 	)
 		.then((response) => response.arrayBuffer())
 		.then(
@@ -90,12 +93,20 @@ const getArtworkInfo = async ({
 							}),
 					),
 				}),
-
-				new Text({
-					text: artworkInfo.description,
-					font: noto,
-					style: { color: '#2a2a2a', fontSize: 20 },
-				}),
+				...(await Promise.all(
+					artworkInfo.description
+						.replaceAll('<p>', '')
+						.replaceAll('</p>', '')
+						.split('\n')
+						.map(
+							async (text) =>
+								new Text({
+									text: await translateEnToZh(text),
+									font: noto,
+									style: { color: '#2a2a2a', fontSize: 20 },
+								}),
+						),
+				)),
 			],
 		}),
 	)
