@@ -5,7 +5,7 @@ const ArtWorkInfoQuerySchema = z.object({
 		type: 'string',
 		description: 'The URL of the artwork',
 		example:
-			'https://artsandculture.google.com/asset/the-bridge-at-argenteuil-0036/CQGVAX9Xla6sag',
+			'https://artsandculture.google.com/asset/woman-with-a-parasol-madame-monet-and-her-son-claude-monet/EwHxeymQQnprMg',
 	}),
 })
 

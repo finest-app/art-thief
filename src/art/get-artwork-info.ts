@@ -35,7 +35,11 @@ const getArtworkInfo = async ({
 
 	const imageURL = artworkInfo.image.contentUrl
 
-	const colors = await getImageColors(imageURL)
+	const imageResponse = await fetch(imageURL)
+
+	const clonedImageResponse = imageResponse.clone()
+
+	const colors = await getImageColors(await imageResponse.blob())
 
 	const { svg, width } = renderToSVG(
 		new View({
@@ -50,22 +54,25 @@ const getArtworkInfo = async ({
 				new Image({
 					href: imageURL,
 					style: {
-						borderRadius: 8,
 						width: '100%',
+						borderRadius: 8,
 						aspectRatio: artworkInfo.image.width / artworkInfo.image.height,
 					},
 				}),
 				new View({
+					style: {
+						gap: 4,
+					},
 					children: [
 						new Text({
 							text: artworkInfo.name.split('-')[0],
 							font: noto,
-							style: { color: '#1a1a1a', fontSize: 20 },
+							style: { color: '#1a1a1a', fontSize: 24 },
 						}),
 						new Text({
 							text: artworkInfo.author,
 							font: noto,
-							style: { color: '#4a4a4a', fontSize: 16 },
+							style: { color: '#4a4a4a', fontSize: 20 },
 						}),
 					],
 				}),
@@ -83,6 +90,7 @@ const getArtworkInfo = async ({
 							}),
 					),
 				}),
+
 				new Text({
 					text: artworkInfo.description,
 					font: noto,
@@ -98,8 +106,8 @@ const getArtworkInfo = async ({
 
 	resvg.resolveImage(
 		artworkInfo.image.contentUrl,
-		await fetch(artworkInfo.image.contentUrl)
-			.then((response) => response.arrayBuffer())
+		await clonedImageResponse
+			.arrayBuffer()
 			.then((buffer) => new Uint8Array(buffer)),
 	)
 

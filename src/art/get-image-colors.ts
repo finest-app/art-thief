@@ -5,9 +5,7 @@ interface ColorPalette {
 	hsl: string
 }
 
-const getImageColors = async (url: string) => {
-	const blob = await fetch(url).then((response) => response.blob())
-
+const getImageColors = async (blob: Blob) => {
 	const formData = new FormData()
 
 	formData.append('file', blob)
