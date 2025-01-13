@@ -48,10 +48,10 @@ const getArtworkInfo = async ({
 		new View({
 			style: {
 				backgroundColor: '#f9fafb',
-				padding: 20,
+				padding: 32,
 				gap: 20,
 				borderRadius: 8,
-				width: 800,
+				width: 824,
 			},
 			children: [
 				new Image({
