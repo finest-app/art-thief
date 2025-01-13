@@ -5,6 +5,7 @@ import * as fontkit from 'fontkit'
 import invariant from 'tiny-invariant'
 import initResvg from '../helpers/initResvg'
 import { renderToSVG, View, Image, Text } from '../indigo-otter'
+import getImageColors from './get-image-colors'
 import type ArtWorkInfoQuerySchema from './schemes/artwork-info-query-schema'
 import artworkInfoSchema from './schemes/artwork-info-schema'
 
@@ -32,6 +33,10 @@ const getArtworkInfo = async ({
 				fontkit.create(new Uint8Array(buffer) as Buffer) as fontkit.Font,
 		)
 
+	const imageURL = artworkInfo.image.contentUrl
+
+	const colors = await getImageColors(imageURL)
+
 	const { svg, width } = renderToSVG(
 		new View({
 			style: {
@@ -43,7 +48,7 @@ const getArtworkInfo = async ({
 			},
 			children: [
 				new Image({
-					href: artworkInfo.image.contentUrl,
+					href: imageURL,
 					style: {
 						borderRadius: 8,
 						width: '100%',
@@ -63,6 +68,20 @@ const getArtworkInfo = async ({
 							style: { color: '#4a4a4a', fontSize: 16 },
 						}),
 					],
+				}),
+				new View({
+					style: { flexDirection: 'row', gap: 12 },
+					children: colors.map(
+						(color) =>
+							new View({
+								style: {
+									width: 48,
+									height: 48,
+									borderRadius: 24,
+									backgroundColor: color.hex,
+								},
+							}),
+					),
 				}),
 				new Text({
 					text: artworkInfo.description,
