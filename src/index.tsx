@@ -1,5 +1,6 @@
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
 import { apiReference } from '@scalar/hono-api-reference'
+import getArtworkInfoSVG from './art/get-art-work-info-svg'
 import getArtworkInfo from './art/get-artwork-info'
 import ArtWorkInfoQuerySchema from './art/schemes/artwork-info-query-schema'
 import getQuoteCard from './quote-card/get-quote-card'
@@ -61,6 +62,31 @@ app.openapi(
 	}),
 	(c) => {
 		return getArtworkInfo(c.req.valid('query'))
+	},
+)
+
+app.openapi(
+	createRoute({
+		path: '/art-svg',
+		method: 'get',
+		request: {
+			query: ArtWorkInfoQuerySchema,
+		},
+		responses: {
+			200: {
+				description: 'Artwork information',
+				content: {
+					'image/svg+xml': {
+						schema: {
+							type: 'string',
+						},
+					},
+				},
+			},
+		},
+	}),
+	(c) => {
+		return getArtworkInfoSVG(c.req.valid('query'))
 	},
 )
 
