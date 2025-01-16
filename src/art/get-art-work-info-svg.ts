@@ -4,22 +4,26 @@ import * as fontkit from 'fontkit'
 import invariant from 'tiny-invariant'
 import { renderToSVG, View, Image, Text } from '../indigo-otter'
 import type ArtWorkInfoQuerySchema from './schemes/artwork-info-query-schema'
+import artworkInfoSchema from './schemes/artwork-info-schema'
 import translateEnToZh from './translateEnToZh'
 
 const getArtworkInfoSVG = async ({
 	url,
 }: z.infer<typeof ArtWorkInfoQuerySchema>) => {
-	const { data: artworkInfo } = await mql(url, { palette: true })
+	const { data } = await mql(url, {
+		palette: true,
+		data: { jsonLD: { selector: 'script[type="application/ld+json"]' } },
+	})
 
 	invariant(
-		artworkInfo.title &&
-			artworkInfo.description &&
-			artworkInfo.image &&
-			artworkInfo.image.width &&
-			artworkInfo.image.height &&
-			artworkInfo.image.palette,
+		'jsonLD' in data &&
+			Array.isArray(data.jsonLD) &&
+			data.image &&
+			data.image.palette,
 		'No artwork found',
 	)
+
+	const artworkInfo = artworkInfoSchema.parse(data.jsonLD[0])
 
 	const noto = await fetch(
 		'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-sc@latest/chinese-simplified-400-normal.ttf',
@@ -41,7 +45,7 @@ const getArtworkInfoSVG = async ({
 			},
 			children: [
 				new Image({
-					href: artworkInfo.image.url,
+					href: artworkInfo.image.contentUrl,
 					style: {
 						width: '100%',
 						borderRadius: 8,
@@ -54,12 +58,12 @@ const getArtworkInfoSVG = async ({
 					},
 					children: [
 						new Text({
-							text: artworkInfo.title.split('—')[0].split('-')[0].trim(),
+							text: artworkInfo.name.split('-')[0],
 							font: noto,
 							style: { color: '#1a1a1a', fontSize: 24 },
 						}),
 						new Text({
-							text: artworkInfo.title.split('—')[0].split('-')[1].trim(),
+							text: artworkInfo.author,
 							font: noto,
 							style: { color: '#4a4a4a', fontSize: 20 },
 						}),
@@ -67,7 +71,7 @@ const getArtworkInfoSVG = async ({
 				}),
 				new View({
 					style: { flexDirection: 'row', gap: 12 },
-					children: artworkInfo.image.palette.map(
+					children: data.image.palette.map(
 						(color) =>
 							new View({
 								style: {
