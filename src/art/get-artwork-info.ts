@@ -12,7 +12,16 @@ import translateEnToZh from './translateEnToZh'
 
 const getArtworkInfo = async ({
 	url,
+	experimental,
 }: z.infer<typeof ArtWorkInfoQuerySchema>) => {
+	if (experimental) {
+		const svgURL = new URL('https://art.visualizeit.app/art-svg')
+
+		svgURL.searchParams.set('url', url)
+
+		return fetch(`https://svg-to-png.mrproper.dev/${svgURL.toString()}`)
+	}
+
 	const html = await fetch(url).then((response) => response.text())
 
 	const $ = cheerio.load(html)

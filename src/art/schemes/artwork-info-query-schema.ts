@@ -7,6 +7,11 @@ const ArtWorkInfoQuerySchema = z.object({
 		example:
 			'https://artsandculture.google.com/asset/woman-with-a-parasol-madame-monet-and-her-son-claude-monet/EwHxeymQQnprMg',
 	}),
+	experimental: z.boolean().optional().openapi({
+		type: 'boolean',
+		description: 'Whether to enable experimental features',
+		example: true,
+	}),
 })
 
 export default ArtWorkInfoQuerySchema
