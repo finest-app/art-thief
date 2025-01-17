@@ -9,6 +9,7 @@ import translateEnToZh from './translateEnToZh'
 
 const getArtworkInfoSVG = async ({
 	url,
+	translate,
 }: z.infer<typeof ArtWorkInfoQuerySchema>) => {
 	const { data } = await mql(url, {
 		palette: true,
@@ -91,7 +92,7 @@ const getArtworkInfoSVG = async ({
 						.map(
 							async (text) =>
 								new Text({
-									text: await translateEnToZh(text),
+									text: translate ? await translateEnToZh(text) : text,
 									font: noto,
 									style: { color: '#2a2a2a', fontSize: 20 },
 								}),

@@ -12,12 +12,14 @@ import translateEnToZh from './translateEnToZh'
 
 const getArtworkInfo = async ({
 	url,
+	translate,
 	experimental,
 }: z.infer<typeof ArtWorkInfoQuerySchema>) => {
 	if (experimental) {
 		const svgURL = new URL('https://art.visualizeit.app/art-svg')
 
 		svgURL.searchParams.set('url', url)
+		svgURL.searchParams.set('translate', String(translate))
 
 		return fetch(`https://svg-to-png.mrproper.dev/${svgURL.toString()}`)
 	}
